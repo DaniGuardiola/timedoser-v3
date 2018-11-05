@@ -1,6 +1,6 @@
 {
-  "name": "youtube-together",
-  "description": "Watch Youtube videos with people over the internet",
+  "name": "timedoser",
+  "description": "Dosify your time",
   "version": "0.1.0",
   "author": {
     "email": "contact@daniguardiola.me",
@@ -44,9 +44,9 @@
     "not op_mini all"
   ],
   "build": {
-    "appId": "me.daniguardiola.together-youtube",
+    "appId": "me.daniguardiola.timedoser",
     "mac": {
-      "category": "public.app-category.video"
+      "category": "public.app-category.productivity"
     }
   }
 }
