@@ -8,20 +8,21 @@
     "url": "https://daniguardiola.me"
   },
   "private": true,
-  "main": "src/electron.js",
+  "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-scripts": "2.1.1"
+    "react-scripts": "2.1.1",
+    "electron-is-dev": "^1.0.1",
+    "electron-devtools-installer": "^2.2.4",
+    "styled-components": "^4.0.3"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
     "electron": "^3.0.7",
     "electron-builder": "^20.31.2",
     "standard": "^12.0.1",
-    "electron-devtools-installer": "^2.2.4",
-    "electron-is-dev": "^1.0.1",
     "wait-on": "^3.1.0"
   },
   "scripts": {
@@ -29,7 +30,7 @@
     "electron-start": "electron .",
     "start": "concurrently 'yarn react-start' 'wait-on http://localhost:3000/ && yarn electron-start'",
     "react-build": "react-scripts build",
-    "electron-build": "mkdir -p build && cp src/electron.js build && electron-builder",
+    "electron-build": "electron-builder",
     "build": "yarn -s react-build && yarn -s electron-build",
     "electron-pack": "electron-builder --dir",
     "test": "react-scripts test",
@@ -39,15 +40,18 @@
     "extends": "react-app"
   },
   "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
+    "last 2 Chrome major versions"
   ],
   "build": {
     "appId": "me.daniguardiola.timedoser",
     "mac": {
       "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [{
+        "target": "deb"
+      }],
+      "category": "Office"
     }
   }
 }

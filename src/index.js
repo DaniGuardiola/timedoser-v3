@@ -1,6 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+import Bubble from './components/Bubble'
+
+function App () {
+  return (
+    <Bubble />
+  )
+}
 
 ReactDOM.render(<App />, document.getElementById('root'))
