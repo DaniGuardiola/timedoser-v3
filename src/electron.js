@@ -2,6 +2,10 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const electronIsDev = require('electron-is-dev')
+const devtoolsInstallerModule = require('electron-devtools-installer')
+
+const devtoolsInstaller = devtoolsInstallerModule.default
+const { REACT_DEVELOPER_TOOLS } = devtoolsInstallerModule
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -19,7 +23,9 @@ function createWindow () {
   )
 
   // Open the DevTools.
-  electronIsDev && mainWindow.webContents.openDevTools()
+  electronIsDev &&
+    devtoolsInstaller(REACT_DEVELOPER_TOOLS)
+      .then(() => mainWindow.webContents.openDevTools())
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
