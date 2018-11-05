@@ -2,10 +2,10 @@
 const electron = require('electron')
 const { app, BrowserWindow } = electron
 const electronIsDev = require('electron-is-dev')
-const devtoolsInstallerModule = require('electron-devtools-installer')
+const electronDevtoolsInstaller = require('electron-devtools-installer')
 
-const devtoolsInstaller = devtoolsInstallerModule.default
-const { REACT_DEVELOPER_TOOLS } = devtoolsInstallerModule
+const devtoolsInstaller = electronDevtoolsInstaller.default
+const { REACT_DEVELOPER_TOOLS } = electronDevtoolsInstaller
 
 const SAFE_TRANSPARENCY_DELAY = 100
 
@@ -33,14 +33,14 @@ const createWindow = async () => {
     resizable: false
   })
 
+  if (electronIsDev) {
+    await devtoolsInstaller(REACT_DEVELOPER_TOOLS)
+    win.webContents.openDevTools({ mode: 'undocked' })
+  }
+
   electronIsDev
     ? win.loadURL('http://localhost:3000') // dev server ran by react-scripts
     : win.loadFile('index.html') // production bundle
-
-  if (electronIsDev) {
-    await devtoolsInstaller(REACT_DEVELOPER_TOOLS)
-    win.webContents.openDevTools({ mode: 'detach' })
-  }
 
   // win.on('closed', function () {})
 
