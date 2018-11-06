@@ -50,6 +50,10 @@
     "linux": {
       "target": [{
         "target": "deb"
+      }, {
+        "target": "AppImage"
+      }, {
+        "target": "snap"
       }],
       "category": "Office"
     }

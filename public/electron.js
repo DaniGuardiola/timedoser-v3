@@ -1,4 +1,3 @@
-// Modules to control application life and create native browser window
 const electron = require('electron')
 const { app, BrowserWindow } = electron
 const electronIsDev = require('electron-is-dev')
@@ -10,7 +9,8 @@ const { REACT_DEVELOPER_TOOLS } = electronDevtoolsInstaller
 const SAFE_TRANSPARENCY_DELAY = 100
 
 if (process.platform === 'linux') {
-  // app.commandLine.appendSwitch('enable-transparent-visuals')
+  app.commandLine.appendSwitch('enable-transparent-visuals')
+  app.disableHardwareAcceleration()
   // app.commandLine.appendSwitch('disable-gpu')
 }
 
@@ -40,7 +40,7 @@ const createWindow = async () => {
 
   electronIsDev
     ? win.loadURL('http://localhost:3000') // dev server ran by react-scripts
-    : win.loadFile('index.html') // production bundle
+    : win.loadFile('build/index.html') // production bundle
 
   // win.on('closed', function () {})
 
