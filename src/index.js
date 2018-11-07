@@ -1,11 +1,29 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Bubble from './components/Bubble'
+import { configure } from 'mobx'
+import { observer } from 'mobx-react'
+import timerStore from './state/timer-store'
+import Timer from './components/Timer'
+import Countdown from './modules/countdown'
+import './fonts/fonts.css'
 
-function App () {
+configure({
+  enforceActions: 'always'
+})
+
+const countdownStore = new Countdown()
+
+function App (props) {
+  const { time: t2, face: f2, active, dragging, draggable, onClick } = props
+  console.log({ t2, f2, active, dragging, draggable, onClick })
+
   return (
-    <Bubble />
+    <Timer
+      timerStore={props.timerStore}
+      countdownStore={countdownStore} />
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const ObserverApp = observer(App)
+
+ReactDOM.render(<ObserverApp timerStore={timerStore} />, document.getElementById('root'))
