@@ -82,7 +82,6 @@ const transitionSetup = css`
   transition-timing-function: ${STYLE.blobTimingFunction};`
 
 const defaultTransition = p => css`
-  ${p => console.log('yooooooooooooo!!!!', p)}
   opacity: ${p.on ? 1 : 0};
   ${transitionSetup}
   transition-property: opacity;`
@@ -238,7 +237,6 @@ const WavePathD =
 
 function Wave (props) {
   const { type, on, active } = props
-  console.log('on', on)
   return (
     <WaveDiv {...props}>
       <WaveSvgWrapper
@@ -364,11 +362,8 @@ const FacesDiv = styled.div`
 
 export default function BlobFaces (props) {
   const { draggable, dragging, face, active, time } = props
-  console.log(props)
 
   let f = { ...faces[face] }
-  console.log('f.wavedash', f.wavedash)
-  console.log('f.wavescroll', f.wavescroll)
 
   if (dragging || !active) f.time = false
 

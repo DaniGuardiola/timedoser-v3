@@ -14,9 +14,6 @@ configure({
 const countdownStore = new Countdown()
 
 function App (props) {
-  const { time: t2, face: f2, active, dragging, draggable, onClick } = props
-  console.log({ t2, f2, active, dragging, draggable, onClick })
-
   return (
     <Timer
       timerStore={props.timerStore}

@@ -15,11 +15,8 @@ const BubbleContainer = styled.div`
     0 6px 7px -4px rgba(0, 0, 0, 0.4);`
 
 const Bubble = observer(function Bubble (props) {
-  console.log('BUBBLE!!')
-  console.log(props)
   const { time, store } = props
   const { status, active, dragging, draggable, onClick } = store
-  console.log(status)
   return (
     <BubbleContainer onClick={onClick}>
       <BubbleFaces

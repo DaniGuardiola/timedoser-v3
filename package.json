@@ -7,6 +7,7 @@
     "name": "Dani Guardiola",
     "url": "https://daniguardiola.me"
   },
+  "license": "UNLICENSED",
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
