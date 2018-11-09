@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, decorate } from 'mobx'
 import * as $ from '../constants'
 
 // ----------------
@@ -8,24 +8,23 @@ const BLOB_SIDE = 'right'
 const BLOB_X = $.BLOB_POSITION[BLOB_SIDE].hidden
 const BLOB_Y = $.TIMER_POSITION_Y_CENTER
 
-class TimerStore {
+class Timer {
     id = Math.random()
-    @observable status = 'standby'
-    @observable dragging = false
-    @observable draggable = false
-    @observable wake = false
-    @observable events = false
-    @observable active = true
-    @observable pinned = false
-    @observable intercept = false
-    @observable autocollapse = false
-    @observable autocollapseTime = 3
-    @observable hidden = true
-    @observable side = BLOB_SIDE
-    @observable x = BLOB_X
-    @observable y = BLOB_Y
+    status = 'standby'
+    dragging = false
+    draggable = false
+    wake = false
+    events = false
+    active = true
+    pinned = false
+    intercept = false
+    autocollapse = false
+    autocollapseTime = 3
+    hidden = true
+    side = BLOB_SIDE
+    x = BLOB_X
+    y = BLOB_Y
 
-    @action('set status')
     setStatus = (status) => {
       const defaultValues = {
         draggable: false,
@@ -91,6 +90,27 @@ class TimerStore {
         (this[key] = diff[key]))
     }
 }
+
+const TimerStore = decorate(Timer, {
+  id: observable,
+  status: observable,
+  dragging: observable,
+  draggable: observable,
+  wake: observable,
+  events: observable,
+  active: observable,
+  pinned: observable,
+  intercept: observable,
+  autocollapse: observable,
+  autocollapseTime: observable,
+  hidden: observable,
+  side: observable,
+  x: observable,
+  y: observable,
+
+  setStatus: action
+
+})
 
 const store = window.store = new TimerStore()
 

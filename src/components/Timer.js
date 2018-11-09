@@ -1,28 +1,28 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Bubble from './Bubble'
+import { useDrag } from '../modules/drag'
+import { useCountdown } from '../state/countdown-store'
 
-class Timer extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      time: {}
-    }
-  }
+function Timer (props) {
+  const { store, store: {
+    draggable
+    // status,
+    // active,
+    // dragging,
+    // x,
+    // y,
+    // onBlobClick,
+    // onMouseLeave
+  } } = props
 
-  componentDidMount () {
-    const { countdownStore } = this.props
-    countdownStore.configure({
-      onLoop: e => this.setState({ time: e.remaining })
-    })
-    countdownStore.start(5)
-  }
+  const [time] = useCountdown()
+  useDrag(draggable)
 
-  render () {
-    const { timerStore } = this.props
-    const { time } = this.state
-
-    return <Bubble store={timerStore} time={time} />
-  }
+  return (
+    <div className='timer'>
+      <Bubble store={store} time={time} />
+    </div>
+  )
 }
 
 export default Timer

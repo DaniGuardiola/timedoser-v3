@@ -18,7 +18,7 @@ const Bubble = observer(function Bubble (props) {
   const { time, store } = props
   const { status, active, dragging, draggable, onClick } = store
   return (
-    <BubbleContainer onClick={onClick}>
+    <BubbleContainer className='bubble' onClick={onClick}>
       <BubbleFaces
         time={time}
         face={status}

@@ -1,5 +1,6 @@
-import { computed, observable, action } from 'mobx'
-import { normalizeSeconds } from './time-lib'
+import { useEffect, useState } from 'react'
+import { computed, observable, action, decorate } from 'mobx'
+import { normalizeSeconds } from '../modules/time-lib'
 
 // ----------------
 // constants
@@ -9,10 +10,10 @@ const SECOND = 1000
 // ----------------
 // countdown class
 
-export default class Countdown {
-  @observable _seconds = false
-  @observable _paused = false
-  @observable _drift = 0
+class Countdown {
+  _seconds = false
+  _paused = false
+  _drift = 0
 
   constructor (opt = {}) {
     this._reset()
@@ -22,7 +23,6 @@ export default class Countdown {
   // ----------------
   // options and private properties
 
-  @action
   _reset () {
     this._cancelNextLoop()
     this._running = false
@@ -68,15 +68,15 @@ export default class Countdown {
   // ----------------
   // getters
 
-  @computed get current () {
+  get current () {
     return normalizeSeconds(this._seconds)
   }
 
-  @computed get remaining () {
+  get remaining () {
     return normalizeSeconds(this._startTime.total - this._seconds)
   }
 
-  @computed get data () {
+  get data () {
     const { _paused, current, remaining, _drift } = this
     const { minutes, seconds, mm, ss } = remaining
     return {
@@ -97,29 +97,24 @@ export default class Countdown {
   // ----------------
   // interface
 
-  @action
   start = (time, opt = {}) => {
     if (time) opt.startTime = time
     this._setOptions(opt)
     this._start()
   }
 
-  @action
   stop = () => {
     this._end()
   }
 
-  @action
   pause = () => {
     this._pause()
   }
 
-  @action
   resume = () => {
     this._resume()
   }
 
-  @action
   configure = (opts) => {
     this._setOptions(opts)
   }
@@ -127,7 +122,6 @@ export default class Countdown {
   // ----------------
   // lifecycle
 
-  @action
   _start () {
     if (this._running) {
       throw new Error('[Countdown] Error: attempted start while running')
@@ -139,7 +133,6 @@ export default class Countdown {
     if (this._onStart) this._onStart(this.data)
   }
 
-  @action
   _end () {
     if (!this._running) {
       throw new Error('[Countdown] Error: attempted end while not running')
@@ -150,21 +143,18 @@ export default class Countdown {
     if (this._onEnd) this._onEnd(data)
   }
 
-  @action
   _pause () {
     this._paused = true
     this._cancelNextLoop()
     if (this._onPause) this._onPause(this.data)
   }
 
-  @action
   _resume () {
     this._paused = false
     this._scheduleLoop()
     if (this._onResume) this._onResume(this.data)
   }
 
-  @action
   _loop (first) {
     this._timeoutDone = true
 
@@ -200,12 +190,10 @@ export default class Countdown {
       .map(l => l.listener())
   }
 
-  @action
   _registerListener (type = 'remaining', time, listener) {
     this._listeners[type].push({ time, listener })
   }
 
-  @action
   _registerListeners (input, type = 'remaining') {
     if (Array.isArray(input)) return input.map(i => this._registerListener(type, i.time, i.listener))
     return Object.keys(input).map(key => this._registerListener(type, key, input[key]))
@@ -242,4 +230,59 @@ export default class Countdown {
     clearTimeout(this._timeout)
     this._timeout = false
   }
+}
+
+const CountdownStore = decorate(Countdown, {
+  _running: observable,
+  _paused: observable,
+  _seconds: observable,
+  _timeoutDone: observable,
+  _lastLoop: observable,
+  _expect: observable,
+  _drift: observable,
+  _listeners: observable,
+
+  _reset: action,
+  _override: action,
+  _setOptions: action,
+
+  current: computed,
+  remaining: computed,
+  data: computed,
+
+  start: action,
+  stop: action,
+  pause: action,
+  resume: action,
+  configure: action,
+
+  _start: action,
+  _end: action,
+  _pause: action,
+  _resume: action,
+  _loop: action,
+
+  _timeEvents: action,
+  _registerListener: action,
+  _registerListeners: action,
+
+  _scheduleLoop: action,
+  _cancelNextLoop: action
+})
+
+const countdownStore = new CountdownStore()
+
+export default countdownStore
+
+export function useCountdown (configure) {
+  const [time, setTime] = useState({})
+  useEffect(() => {
+    countdownStore.configure({
+      ...configure,
+      onLoop: e => setTime(e.remaining)
+    })
+    countdownStore.start(5)
+    return () => countdownStore.stop()
+  }, [])
+  return [time, countdownStore]
 }
