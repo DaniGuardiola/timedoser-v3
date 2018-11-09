@@ -4,14 +4,13 @@ const electronIsDev = require('electron-is-dev')
 const electronDevtoolsInstaller = require('electron-devtools-installer')
 
 const devtoolsInstaller = electronDevtoolsInstaller.default
-const { REACT_DEVELOPER_TOOLS } = electronDevtoolsInstaller
+const { REACT_DEVELOPER_TOOLS, MOBX_DEVTOOLS } = electronDevtoolsInstaller
 
 const SAFE_TRANSPARENCY_DELAY = 100
 
 if (process.platform === 'linux') {
   app.commandLine.appendSwitch('enable-transparent-visuals')
   app.disableHardwareAcceleration()
-  // app.commandLine.appendSwitch('disable-gpu')
 }
 
 const createWindow = async () => {
@@ -35,6 +34,7 @@ const createWindow = async () => {
 
   if (electronIsDev) {
     await devtoolsInstaller(REACT_DEVELOPER_TOOLS)
+    await devtoolsInstaller(MOBX_DEVTOOLS)
     win.webContents.openDevTools({ mode: 'undocked' })
   }
 

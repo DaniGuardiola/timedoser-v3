@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { configure } from 'mobx'
 import { observer } from 'mobx-react'
-import timerStore from './state/timer-store'
 import Timer from './components/Timer'
 import './fonts/fonts.css'
 
@@ -12,10 +11,10 @@ configure({
 
 function App (props) {
   return (
-    <Timer store={props.timerStore} />
+    <Timer />
   )
 }
 
 const ObserverApp = observer(App)
 
-ReactDOM.render(<ObserverApp timerStore={timerStore} />, document.getElementById('root'))
+ReactDOM.render(<ObserverApp />, document.getElementById('root'))

@@ -14,18 +14,18 @@ const styleSwitch = (prop, options) => props => options[props[prop]] || ''
 
 const STYLE = {
   duration: 2,
-  blobTransitionDuration: 0.4,
-  blobTimingFunction: 'ease-in-out',
-  blobLoadingColor: '#fff',
-  blobLoadingCursor: 'progress',
-  blobStandbyColor: '#607d8b',
-  blobWorkColor: '#2196f3',
-  blobWorkEndColor: '#1976d2',
-  blobBreakColor: '#009688'
+  transitionDuration: 0.4,
+  timingFunction: 'ease-in-out',
+  loadingColor: '#fff',
+  loadingCursor: 'progress',
+  standbyColor: '#607d8b',
+  workColor: '#2196f3',
+  workEndColor: '#1976d2',
+  breakColor: '#009688'
 }
 
 const ANIM = {
-  blobWaveScroll: keyframes`
+  waveScroll: keyframes`
     from {
       margin-left: 0px;
     }
@@ -33,7 +33,7 @@ const ANIM = {
     to {
       margin-left: -220px;
     }`,
-  blobWaveScrollLoading: keyframes`
+  waveScrollLoading: keyframes`
     from {
       margin-left: 0px;
     }
@@ -41,7 +41,7 @@ const ANIM = {
     to {
       margin-left: -240px;
     }`,
-  blobWaveColors: keyframes`
+  waveColors: keyframes`
     0% {
       stroke: #009688;
     }
@@ -57,7 +57,7 @@ const ANIM = {
     100% {
       stroke: #009688;
     }`,
-  blobWaveDraw: keyframes`
+  waveDraw: keyframes`
     from {
       stroke-dashoffset: 0;
     }
@@ -78,8 +78,8 @@ const layerStyles = css`
   height: 100%;`
 
 const transitionSetup = css`
-  transition-duration: ${STYLE.blobTransitionDuration}s;
-  transition-timing-function: ${STYLE.blobTimingFunction};`
+  transition-duration: ${STYLE.transitionDuration}s;
+  transition-timing-function: ${STYLE.timingFunction};`
 
 const defaultTransition = p => css`
   opacity: ${p.on ? 1 : 0};
@@ -199,7 +199,7 @@ const waveSvgType = p => styleSwitch('type', {
   dash: css`
     height: 47.5px;
     border-top: 10px solid transparent;
-    animation: ${ANIM.blobWaveScrollLoading} ${STYLE.duration * 4}s cubic-bezier(
+    animation: ${ANIM.waveScrollLoading} ${STYLE.duration * 4}s cubic-bezier(
       0.72,
       0.41,
       0.41,
@@ -208,7 +208,7 @@ const waveSvgType = p => styleSwitch('type', {
     height: 25px;
     border-top: 4px solid transparent;
     transform: translate(0, 0);
-    animation: ${ANIM.blobWaveScroll} ${STYLE.duration * 7}s linear infinite;` })(p)
+    animation: ${ANIM.waveScroll} ${STYLE.duration * 7}s linear infinite;` })(p)
 
 const WaveSvg = styled.svg`
   margin-left: -60px;
@@ -218,8 +218,8 @@ const WaveSvg = styled.svg`
 
 const wavePathType = p => styleSwitch('type', {
   dash: css`
-    animation: ${ANIM.blobWaveColors} ${STYLE.duration * 2}s ease-in-out infinite,
-      ${ANIM.blobWaveDraw} ${STYLE.duration * 2}s linear infinite;
+    animation: ${ANIM.waveColors} ${STYLE.duration * 2}s ease-in-out infinite,
+      ${ANIM.waveDraw} ${STYLE.duration * 2}s linear infinite;
     stroke-dashoffset: 0;
     stroke-dasharray: 68 16;
     stroke-width: 4px;`,
@@ -300,14 +300,14 @@ const defaultFace = {
 // loading
 const loading = {
   wavedash: true,
-  color: STYLE.blobLoadingColor,
-  cursor: STYLE.blobLoadingCursor
+  color: STYLE.loadingColor,
+  cursor: STYLE.loadingCursor
 }
 
 // standby
 const standby = {
   start: true,
-  color: STYLE.blobStandbyColor,
+  color: STYLE.standbyColor,
   cursor: 'pointer'
 }
 
@@ -315,14 +315,14 @@ const standby = {
 const work = {
   wavescroll: true,
   time: true,
-  color: STYLE.blobWorkColor
+  color: STYLE.workColor
 }
 
 // work
 const workend = {
   wavescroll: true,
   workend: true,
-  color: STYLE.blobWorkEndColor,
+  color: STYLE.workEndColor,
   cursor: 'pointer'
 }
 
@@ -331,7 +331,7 @@ const breakFace = {
   wavescroll: true,
   break: true,
   time: true,
-  color: STYLE.blobBreakColor
+  color: STYLE.breakColor
 }
 
 // ----------------
@@ -360,7 +360,7 @@ const FacesDiv = styled.div`
   border: 2px solid #fff;
   border-radius: 50%;`
 
-export default function BlobFaces (props) {
+export default function BubbleFaces (props) {
   const { draggable, dragging, face, active, time } = props
 
   let f = { ...faces[face] }

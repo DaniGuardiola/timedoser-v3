@@ -86,7 +86,9 @@ export default class Drag {
     this.x = left
     this.y = top
 
+    console.log('start')
     this._onStart(event)
+    console.log('start')
   }
 
   _move (event) {
@@ -113,7 +115,7 @@ export default class Drag {
   }
 }
 
-export function useDrag (draggable) {
+export function useDrag (store) {
   const [drag, setDrag] = useState()
   useEffect(() => {
     const { top, bottom, x } = $.TIMER_COLLISION
@@ -126,9 +128,9 @@ export function useDrag (draggable) {
     }
 
     setDrag(new Drag('.timer', {
-      // start: this.props.onDragStart,
-      // end: this.props.onDragStop,
-      // inertia: this.props.onDragInertia,
+      start: store.onDrag,
+      end: store.onDrop,
+      inertia: store.onInertiaStart,
       restrict,
       handle: '.bubble'
     }))
@@ -137,8 +139,8 @@ export function useDrag (draggable) {
   useEffect(() => {
     // enable / disable dragging
     if (drag) {
-      draggable && drag.enable()
-      !draggable && drag.disable()
+      store.draggable && drag.enable()
+      !store.draggable && drag.disable()
     }
-  }, [draggable])
+  }, [store.draggable])
 }

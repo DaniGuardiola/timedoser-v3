@@ -4,9 +4,18 @@ import * as $ from '../constants'
 // ----------------
 // constants
 
-const BLOB_SIDE = 'right'
-const BLOB_X = $.BLOB_POSITION[BLOB_SIDE].hidden
-const BLOB_Y = $.TIMER_POSITION_Y_CENTER
+const BUBBLE_SIDE = 'left'
+const BUBBLE_X = $.BUBBLE_POSITION[BUBBLE_SIDE].hidden
+const BUBBLE_Y = $.TIMER_POSITION_Y_CENTER
+
+// ----------------
+// utils
+
+const calcSide = x =>
+  x + $.BUBBLE_DIAMETER / 2 < window.screen.availWidth / 2 ? 'left' : 'right'
+
+const calcPosition = (side, hidden, active) =>
+  $.BUBBLE_POSITION[side][hidden ? 'hidden' : active ? 'active' : 'inactive']
 
 class Timer {
     id = Math.random()
@@ -20,10 +29,14 @@ class Timer {
     intercept = false
     autocollapse = false
     autocollapseTime = 3
-    hidden = true
-    side = BLOB_SIDE
-    x = BLOB_X
-    y = BLOB_Y
+    hidden = false
+    side = BUBBLE_SIDE
+    x = BUBBLE_X
+    y = BUBBLE_Y
+
+    _calcX () {
+      return calcPosition(this.side, this.hidden, this.active)
+    }
 
     setStatus = (status) => {
       const defaultValues = {
@@ -89,6 +102,29 @@ class Timer {
       return Object.keys(diff).forEach(key =>
         (this[key] = diff[key]))
     }
+
+    onDrag = () => {
+      this.dragging = true
+      this.events = false
+    }
+
+    onInertiaStart = () => {
+      this.intercept = false
+    }
+
+    onDrop = (e) => {
+      console.log(e.dx, e.dy)
+      this.active = true
+      this.dragging = false
+      this.events = true
+      this.intercept = false
+      this.autocollapse = this.pinned ? this.autocollapse : true
+      this.autocollapseTime = this.pinned ? this.autocollapseTime : 3
+      const x = Math.round(this.x + 0)
+      this.y = Math.round(this.y + 0)
+      this.side = calcSide(x)
+      this.x = this._calcX()
+    }
 }
 
 const TimerStore = decorate(Timer, {
@@ -108,8 +144,10 @@ const TimerStore = decorate(Timer, {
   x: observable,
   y: observable,
 
-  setStatus: action
-
+  setStatus: action,
+  onDrag: action,
+  onInertiaStart: action,
+  onDrop: action
 })
 
 const store = window.store = new TimerStore()
