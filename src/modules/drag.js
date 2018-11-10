@@ -123,8 +123,8 @@ export function useDrag (store) {
     const restrict = {
       top: top / $.TIMER_HEIGHT,
       bottom: 1 - bottom / $.TIMER_HEIGHT,
-      left: x.inactive / $.TIMER_WIDTH,
-      right: 1 - x.inactive / $.TIMER_WIDTH
+      left: x.active / $.TIMER_WIDTH,
+      right: 1 - x.active / $.TIMER_WIDTH
     }
 
     setDrag(new Drag('.timer', {
@@ -145,4 +145,18 @@ export function useDrag (store) {
       !store.draggable && drag.disable()
     }
   }, [store.draggable])
+
+  const [transform, setTransform] = useState(false)
+  useEffect(() => {
+    const posX = store.x - $.BUBBLE_MARGIN_LEFT
+    const posY = store.y - $.BUBBLE_MARGIN_TOP
+
+    console.log('!store.dragging')
+    console.log(!store.dragging)
+
+    !store.dragging && setTransform(`translate(${posX}px, ${posY}px)`)
+    store.dragging && setTransform(false)
+  }, [store.dragging, store.x, store.y])
+
+  return transform ? { transform } : {}
 }

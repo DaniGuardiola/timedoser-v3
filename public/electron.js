@@ -39,7 +39,7 @@ const createWindow = async () => {
   }
 
   electronIsDev
-    ? win.loadURL('http://localhost:3000') // dev server ran by react-scripts
+    ? win.loadURL('http://localhost:3000') // dev server by react-scripts
     : win.loadFile('build/index.html') // production bundle
 
   // win.on('closed', function () {})

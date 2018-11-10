@@ -14,17 +14,21 @@ Object.keys(test).map(k => console.log(`${k}: `, test[k]))
 // })
 
 function App (props) {
-  console.log('App >', store.y)
-  const fakeStore = {
+  // ugly workaround don't look please
+  // asked in gitter: https://gitter.im/mobxjs/mobx?at=5be62a2ee0fd6b4360cc19c2
+  const stuff = {
     y: store.y,
     x: store.x,
     dragging: store.dragging
   }
+  Object.isSealed(stuff)
+  // ok you can look now
+
   return (
-    <Timer test123 fakeStore={fakeStore} />
+    <Timer />
   )
 }
 
-const ObserverApp = observer(App)
+const ObserverApp = observer(App) // probably unnecessary
 
 ReactDOM.render(<ObserverApp />, document.getElementById('root'))

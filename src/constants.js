@@ -3,11 +3,11 @@
 
 // dimensions
 export const TIMER_WIDTH = 400
-export const TIMER_HEIGHT = 400
+export const TIMER_HEIGHT = 800
 export const BUBBLE_DIAMETER = 64
 
 // bubble margin
-export const BUBBLE_MARGIN_TOP = 300
+export const BUBBLE_MARGIN_TOP = 368
 
 // sticky depth
 export const STICKY_ACTIVE_DEPTH = -24

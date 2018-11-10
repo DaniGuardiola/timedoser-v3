@@ -1,11 +1,11 @@
-import { observable, action } from 'mobx'
+import { observable, action, transaction } from 'mobx'
 import * as $ from '../constants'
 
 // ----------------
 // constants
 
 const BUBBLE_SIDE = 'left'
-const BUBBLE_X = $.BUBBLE_POSITION[BUBBLE_SIDE].inactive
+const BUBBLE_X = $.BUBBLE_POSITION[BUBBLE_SIDE].active
 const BUBBLE_Y = $.TIMER_POSITION_Y_CENTER
 
 // ----------------
@@ -118,19 +118,20 @@ class TimerStore {
 
     @action
     onDrop = (dx, dy) => {
-      console.log(dx, dy)
-      console.log(`Before: ${this.x} ${this.y}`)
-      this.active = true
-      this.events = true
-      this.intercept = false
-      this.autocollapse = this.pinned ? this.autocollapse : true
-      this.autocollapseTime = this.pinned ? this.autocollapseTime : 3
-      const x = Math.round(this.x + dx)
-      this.y = Math.round(this.y + dy)
-      this.side = calcSide(x)
-      this.x = this._calcX()
-      console.log(`After: ${this.x} ${this.y}`)
-      this.dragging = false
+      transaction(() => {
+        this.dragging = false
+        this.active = true
+        this.events = true
+        this.intercept = false
+        // autocollapse behavior
+        this.autocollapse = this.pinned ? this.autocollapse : true
+        this.autocollapseTime = this.pinned ? this.autocollapseTime : 3
+        // positioning
+        this.y = Math.round(this.y + dy)
+        const x = Math.round(this.x + dx)
+        this.side = calcSide(x)
+        this.x = this._calcX()
+      })
     }
 }
 

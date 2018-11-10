@@ -17,27 +17,18 @@ const TimerDiv = styled.div`
   transition-property: ${p => p.dragging ? 'none' : 'transform'};`
 
 function Timer (props) {
-  const { fakeStore } = props
   useEffect(() => store.setStatus('work'), [])
   console.log(props)
   const [time] = useCountdown()
 
-  useDrag(store)
-
-  const style = {}
-
-  // caculate position
-  const posX = fakeStore.x - $.BUBBLE_MARGIN_LEFT
-  const posY = fakeStore.y - $.BUBBLE_MARGIN_TOP
-
-  !fakeStore.dragging && (style.transform = `translate(${posX}px, ${posY}px)`)
-
-  console.log(fakeStore.dragging, fakeStore.x, fakeStore.y)
+  const style = useDrag(store)
+  console.log('style')
+  console.log(style)
 
   return (
-    <TimerDiv className='timer'
-      dragging={fakeStore.dragging}
-
+    <TimerDiv
+      className='timer'
+      dragging={store.dragging}
       style={style}>
       <Bubble store={store} time={time} />
     </TimerDiv>
