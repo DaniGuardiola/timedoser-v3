@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { computed, observable, action, decorate } from 'mobx'
-import { normalizeSeconds } from '../modules/time-lib'
+import { normalizeSeconds } from './time-lib'
 
 // ----------------
 // constants
@@ -232,57 +231,23 @@ class Countdown {
   }
 }
 
-const CountdownStore = decorate(Countdown, {
-  _running: observable,
-  _paused: observable,
-  _seconds: observable,
-  _timeoutDone: observable,
-  _lastLoop: observable,
-  _expect: observable,
-  _drift: observable,
-  _listeners: observable,
-
-  _reset: action,
-  _override: action,
-  _setOptions: action,
-
-  current: computed,
-  remaining: computed,
-  data: computed,
-
-  start: action,
-  stop: action,
-  pause: action,
-  resume: action,
-  configure: action,
-
-  _start: action,
-  _end: action,
-  _pause: action,
-  _resume: action,
-  _loop: action,
-
-  _timeEvents: action,
-  _registerListener: action,
-  _registerListeners: action,
-
-  _scheduleLoop: action,
-  _cancelNextLoop: action
-})
-
-const countdownStore = new CountdownStore()
-
-export default countdownStore
+export default Countdown
 
 export function useCountdown (configure) {
-  const [time, setTime] = useState({})
+  const [time, setTime] = useState({
+    minutes: 0,
+    seconds: 0,
+    mm: '00',
+    ss: '00'
+  })
   useEffect(() => {
-    countdownStore.configure({
+    const countdown = new Countdown()
+    countdown.configure({
       ...configure,
       onLoop: e => setTime(e.remaining)
     })
-    countdownStore.start(5)
-    return () => countdownStore.stop()
+    // countdown.start(5)
+    return () => countdown.stop()
   }, [])
-  return [time, countdownStore]
+  return [time]
 }

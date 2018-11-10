@@ -24,15 +24,14 @@ const BubbleContainer = styled.div`
 
 const Bubble = observer(function Bubble (props) {
   const { time, store } = props
-  const { status, active, dragging, draggable, onClick } = store
   return (
-    <BubbleContainer className='bubble' onClick={onClick}>
+    <BubbleContainer className='bubble' onClick={store.onClick}>
       <BubbleFaces
         time={time}
-        face={status}
-        active={active}
-        dragging={dragging}
-        draggable={draggable} />
+        face={store.status}
+        active={store.active}
+        dragging={store.dragging}
+        draggable={store.draggable} />
     </BubbleContainer>
   )
 })

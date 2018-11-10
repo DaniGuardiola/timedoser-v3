@@ -129,7 +129,9 @@ export function useDrag (store) {
 
     setDrag(new Drag('.timer', {
       start: store.onDrag,
-      end: store.onDrop,
+      end: event => {
+        store.onDrop(event.page.x - event.x0, event.page.y - event.y0)
+      },
       inertia: store.onInertiaStart,
       restrict,
       handle: '.bubble'

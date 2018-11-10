@@ -17,12 +17,16 @@
     "interactjs": "^1.4.0-alpha.17",
     "mobx": "^5.6.0",
     "mobx-react": "^5.3.6",
+    "mobx-react-devtools": "^6.0.3",
     "react": "^16.7.0-alpha.0",
     "react-dom": "^16.7.0-alpha.0",
     "react-scripts": "2.1.1",
     "styled-components": "^4.0.3"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "customize-cra": "^0.2.3",
+    "react-app-rewired": "^1.6.2",
     "concurrently": "^4.0.1",
     "electron": "^3.0.7",
     "electron-builder": "^20.31.2",
@@ -30,14 +34,14 @@
     "wait-on": "^3.1.0"
   },
   "scripts": {
-    "react-start": "react-scripts start",
+    "react-start": "react-app-rewired start",
     "electron-start": "electron .",
     "start": "concurrently 'yarn react-start' 'wait-on http://localhost:3000/ && yarn electron-start'",
-    "react-build": "react-scripts build",
+    "react-build": "react-app-rewired build",
     "electron-build": "electron-builder",
     "build": "yarn -s react-build && yarn -s electron-build",
     "electron-pack": "electron-builder --dir",
-    "react-eject": "react-scripts eject"
+    "react-eject": "react-app-rewired eject"
   },
   "browserslist": [
     "last 2 Chrome major versions"

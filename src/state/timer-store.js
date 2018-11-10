@@ -1,11 +1,11 @@
-import { observable, action, decorate } from 'mobx'
+import { observable, action } from 'mobx'
 import * as $ from '../constants'
 
 // ----------------
 // constants
 
 const BUBBLE_SIDE = 'left'
-const BUBBLE_X = $.BUBBLE_POSITION[BUBBLE_SIDE].hidden
+const BUBBLE_X = $.BUBBLE_POSITION[BUBBLE_SIDE].inactive
 const BUBBLE_Y = $.TIMER_POSITION_Y_CENTER
 
 // ----------------
@@ -17,27 +17,29 @@ const calcSide = x =>
 const calcPosition = (side, hidden, active) =>
   $.BUBBLE_POSITION[side][hidden ? 'hidden' : active ? 'active' : 'inactive']
 
-class Timer {
-    id = Math.random()
-    status = 'standby'
-    dragging = false
-    draggable = false
-    wake = false
-    events = false
-    active = true
-    pinned = false
-    intercept = false
-    autocollapse = false
-    autocollapseTime = 3
-    hidden = false
-    side = BUBBLE_SIDE
-    x = BUBBLE_X
-    y = BUBBLE_Y
+class TimerStore {
+    @observable id = Math.random()
+    @observable status = 'standby'
+    @observable dragging = false
+    @observable draggable = false
+    @observable wake = false
+    @observable events = false
+    @observable active = true
+    @observable pinned = false
+    @observable intercept = false
+    @observable autocollapse = false
+    @observable autocollapseTime = 3
+    @observable hidden = false
+    @observable side = BUBBLE_SIDE
+    @observable x = BUBBLE_X
+    @observable y = BUBBLE_Y
 
+    @action
     _calcX () {
       return calcPosition(this.side, this.hidden, this.active)
     }
 
+    @action
     setStatus = (status) => {
       const defaultValues = {
         draggable: false,
@@ -103,52 +105,34 @@ class Timer {
         (this[key] = diff[key]))
     }
 
+    @action
     onDrag = () => {
       this.dragging = true
       this.events = false
     }
 
+    @action
     onInertiaStart = () => {
       this.intercept = false
     }
 
-    onDrop = (e) => {
-      console.log(e.dx, e.dy)
+    @action
+    onDrop = (dx, dy) => {
+      console.log(dx, dy)
+      console.log(`Before: ${this.x} ${this.y}`)
       this.active = true
-      this.dragging = false
       this.events = true
       this.intercept = false
       this.autocollapse = this.pinned ? this.autocollapse : true
       this.autocollapseTime = this.pinned ? this.autocollapseTime : 3
-      const x = Math.round(this.x + 0)
-      this.y = Math.round(this.y + 0)
+      const x = Math.round(this.x + dx)
+      this.y = Math.round(this.y + dy)
       this.side = calcSide(x)
       this.x = this._calcX()
+      console.log(`After: ${this.x} ${this.y}`)
+      this.dragging = false
     }
 }
-
-const TimerStore = decorate(Timer, {
-  id: observable,
-  status: observable,
-  dragging: observable,
-  draggable: observable,
-  wake: observable,
-  events: observable,
-  active: observable,
-  pinned: observable,
-  intercept: observable,
-  autocollapse: observable,
-  autocollapseTime: observable,
-  hidden: observable,
-  side: observable,
-  x: observable,
-  y: observable,
-
-  setStatus: action,
-  onDrag: action,
-  onInertiaStart: action,
-  onDrop: action
-})
 
 const store = window.store = new TimerStore()
 
