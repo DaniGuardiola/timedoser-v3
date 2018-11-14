@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import interact from 'interactjs'
 import * as $ from '../constants'
+import logSequence from '../logSequence'
 
 export default class Drag {
   constructor (selector, opt) {
@@ -51,6 +52,10 @@ export default class Drag {
     })
   }
 
+  cleanup () {
+    this.interact.unset()
+  }
+
   // ----------------
   // setup
 
@@ -86,9 +91,7 @@ export default class Drag {
     this.x = left
     this.y = top
 
-    console.log('start')
     this._onStart(event)
-    console.log('start')
   }
 
   _move (event) {
@@ -115,8 +118,16 @@ export default class Drag {
   }
 }
 
-export function useDrag (store) {
+let execution = 0
+
+export function useDrag (opt, n) {
   const [drag, setDrag] = useState()
+
+  execution++
+
+  logSequence(`> ${opt.n} / ${execution} - hook`)
+
+  // setup and cleanup
   useEffect(() => {
     const { top, bottom, x } = $.TIMER_COLLISION
 
@@ -127,36 +138,45 @@ export function useDrag (store) {
       right: 1 - x.active / $.TIMER_WIDTH
     }
 
-    setDrag(new Drag('.timer', {
-      start: store.onDrag,
+    const dragInstance = new Drag(opt.class, {
+      start: opt.onDrag,
       end: event => {
-        store.onDrop(event.page.x - event.x0, event.page.y - event.y0)
+        opt.onDrop(event.page.x - event.x0, event.page.y - event.y0)
       },
-      inertia: store.onInertiaStart,
+      inertia: opt.onInertiaStart,
       restrict,
-      handle: '.bubble'
-    }))
+      handle: opt.handleClass
+    })
+
+    setDrag(dragInstance)
+
+    // return dragInstance.cleanup()
   }, [])
 
+  // enable / disable dragging
   useEffect(() => {
-    // enable / disable dragging
     if (drag) {
-      store.draggable && drag.enable()
-      !store.draggable && drag.disable()
+      opt.draggable && drag.enable()
+      !opt.draggable && drag.disable()
     }
-  }, [store.draggable])
+  }, [opt.draggable])
 
+  // component style
   const [transform, setTransform] = useState(false)
   useEffect(() => {
-    const posX = store.x - $.BUBBLE_MARGIN_LEFT
-    const posY = store.y - $.BUBBLE_MARGIN_TOP
+    logSequence(`> ${opt.n} / ${execution} - effect`)
+    const posX = opt.x - $.BUBBLE_MARGIN_LEFT
+    const posY = opt.y - $.BUBBLE_MARGIN_TOP
 
-    console.log('!store.dragging')
-    console.log(!store.dragging)
+    !opt.dragging && setTransform(`translate(${posX}px, ${posY}px)`)
+    opt.dragging && setTransform(false)
+  }, [opt.dragging, opt.x, opt.y])
 
-    !store.dragging && setTransform(`translate(${posX}px, ${posY}px)`)
-    store.dragging && setTransform(false)
-  }, [store.dragging, store.x, store.y])
+  const style = transform ? { transform } : {}
+  // return style
 
-  return transform ? { transform } : {}
+  return [style, {
+    posX: opt.x - $.BUBBLE_MARGIN_LEFT,
+    posY: opt.y - $.BUBBLE_MARGIN_TOP,
+    dragging: opt.dragging }]
 }

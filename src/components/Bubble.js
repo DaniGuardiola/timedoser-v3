@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import BubbleFaces from './BubbleFaces'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import * as $ from '../constants'
 
 // pointer-events: ${this.props.active ? 'initial' : 'none'};

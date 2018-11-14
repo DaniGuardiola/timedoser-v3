@@ -246,7 +246,7 @@ export function useCountdown (configure) {
       ...configure,
       onLoop: e => setTime(e.remaining)
     })
-    // countdown.start(5)
+    countdown.start(5)
     return () => countdown.stop()
   }, [])
   return [time]
