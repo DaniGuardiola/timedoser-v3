@@ -167,6 +167,8 @@ class Countdown {
 
     this._timeEvents()
 
+    this._debugLog()
+
     return this.remaining.total <= 0
       ? this._end()
       : this._scheduleLoop()

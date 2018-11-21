@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import interact from 'interactjs'
 import * as $ from '../constants'
-import logSequence from '../logSequence'
 
 export default class Drag {
   constructor (selector, opt) {
@@ -74,7 +73,17 @@ export default class Drag {
       onmove: e => this._move(e),
       onend: e => this._end(e),
       oninertiastart: e => this._inertia(e),
-      restrict: this.restrict || null
+      restrict: this.restrict || null,
+      snap: {
+        targets: [{
+          x: 0,
+          range: Infinity
+        }, {
+          x: window.innerWidth,
+          range: Infinity
+        }],
+        endOnly: true
+      }
     })
   }
 
@@ -118,14 +127,8 @@ export default class Drag {
   }
 }
 
-let execution = 0
-
 export function useDrag (opt, n) {
   const [drag, setDrag] = useState()
-
-  execution++
-
-  logSequence(`> ${opt.n} / ${execution} - hook`)
 
   // setup and cleanup
   useEffect(() => {
@@ -164,7 +167,6 @@ export function useDrag (opt, n) {
   // component style
   const [transform, setTransform] = useState(false)
   useEffect(() => {
-    logSequence(`> ${opt.n} / ${execution} - effect`)
     const posX = opt.x - $.BUBBLE_MARGIN_LEFT
     const posY = opt.y - $.BUBBLE_MARGIN_TOP
 
@@ -173,10 +175,6 @@ export function useDrag (opt, n) {
   }, [opt.dragging, opt.x, opt.y])
 
   const style = transform ? { transform } : {}
-  // return style
 
-  return [style, {
-    posX: opt.x - $.BUBBLE_MARGIN_LEFT,
-    posY: opt.y - $.BUBBLE_MARGIN_TOP,
-    dragging: opt.dragging }]
+  return style
 }

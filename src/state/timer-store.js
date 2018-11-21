@@ -19,7 +19,7 @@ const calcPosition = (side, hidden, active) =>
 
 class TimerStore {
     @observable id = Math.random()
-    @observable status = 'standby'
+    @observable status = 'loading'
     @observable dragging = false
     @observable draggable = false
     @observable wake = false
